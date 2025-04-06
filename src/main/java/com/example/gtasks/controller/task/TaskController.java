@@ -7,7 +7,6 @@ import com.example.gtasks.model.task.Task;
 import com.example.gtasks.service.task.TaskService;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,7 +28,7 @@ public class TaskController {
     }
 
     @GetMapping("/{id}")
-    public Optional<Task> getTaskById(@PathVariable Long id) {
+    public Task getTaskById(@PathVariable Long id) {
         return service.findTaskById(id);
     }
 
@@ -39,7 +38,7 @@ public class TaskController {
     }
 
     @PutMapping("/{id}")
-    public Optional<Task> updateTask(@PathVariable Long id, @RequestBody Task task) {
+    public Task updateTask(@PathVariable Long id, @RequestBody Task task) {
         return service.updateTask(id, task);
     }
 
