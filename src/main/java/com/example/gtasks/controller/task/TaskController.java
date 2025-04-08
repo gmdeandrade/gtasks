@@ -3,8 +3,11 @@ package com.example.gtasks.controller.task;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.gtasks.model.task.Task;
+import com.example.gtasks.dto.task.TaskRequestDTO;
+import com.example.gtasks.dto.task.TaskResponseDTO;
 import com.example.gtasks.service.task.TaskService;
+
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -23,23 +26,23 @@ public class TaskController {
     private TaskService service;
 
     @GetMapping("")
-    public List<Task> getAllTasks() {
+    public List<TaskResponseDTO> getAllTasks() {
         return service.findAllTasks();
     }
 
     @GetMapping("/{id}")
-    public Task getTaskById(@PathVariable Long id) {
+    public TaskResponseDTO getTaskById(@PathVariable Long id) {
         return service.findTaskById(id);
     }
 
     @PostMapping("")
-    public Task createTask(@RequestBody Task task) {
-        return service.createTask(task);
+    public TaskResponseDTO createTask(@Valid @RequestBody TaskRequestDTO dto) {
+        return service.createTask(dto);
     }
 
     @PutMapping("/{id}")
-    public Task updateTask(@PathVariable Long id, @RequestBody Task task) {
-        return service.updateTask(id, task);
+    public TaskResponseDTO updateTask(@PathVariable Long id, @Valid @RequestBody TaskRequestDTO dto) {
+        return service.updateTask(id, dto);
     }
 
     @DeleteMapping("/{id}")
