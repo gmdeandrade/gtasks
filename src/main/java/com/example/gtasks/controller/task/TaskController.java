@@ -1,6 +1,7 @@
 package com.example.gtasks.controller.task;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.gtasks.dto.task.TaskRequestDTO;
@@ -9,9 +10,10 @@ import com.example.gtasks.service.task.TaskService;
 
 import jakarta.validation.Valid;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,9 +27,12 @@ public class TaskController {
     @Autowired
     private TaskService service;
 
-    @GetMapping("")
-    public List<TaskResponseDTO> getAllTasks() {
-        return service.findAllTasks();
+    @GetMapping
+    public Page<TaskResponseDTO> findAllTasks(
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) Boolean completed,
+            @PageableDefault(page = 0, size = 10, sort = "id") Pageable pageable) {
+        return service.findAllTasks(title, completed, pageable);
     }
 
     @GetMapping("/{id}")

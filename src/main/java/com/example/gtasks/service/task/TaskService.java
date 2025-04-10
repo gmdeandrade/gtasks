@@ -1,9 +1,8 @@
 package com.example.gtasks.service.task;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.gtasks.dto.task.TaskRequestDTO;
@@ -17,8 +16,20 @@ public class TaskService {
     @Autowired
     private TaskRepository repository;
 
-    public List<TaskResponseDTO> findAllTasks() {
-        return repository.findAll().stream().map(this::toResponseDTO).collect(Collectors.toList());
+    public Page<TaskResponseDTO> findAllTasks(String title, Boolean completed, Pageable pageable) {
+        Page<Task> tasks;
+
+        if (title != null && !title.isBlank() && completed != null) {
+            tasks = repository.findByCompletedAndTitleContainingIgnoreCase(completed, title, pageable);
+        } else if (title != null && !title.isBlank()) {
+            tasks = repository.findByTitleContainingIgnoreCase(title, pageable);
+        } else if (completed != null) {
+            tasks = repository.findByCompleted(completed, pageable);
+        } else {
+            tasks = repository.findAll(pageable);
+        }
+
+        return tasks.map(this::toResponseDTO);
     }
 
     public TaskResponseDTO findTaskById(Long id) {
